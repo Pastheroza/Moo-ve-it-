@@ -1,6 +1,6 @@
 # Moo-ve It! - Autonomous Herd Management Simulation
 
-![Moo-ve It! Screenshot](https://storage.googleapis.com/aistudio-hosting/project-assets/2024-07-16/1721151121659-moove-it-screenshot.png)
+TO TRY IT PRESS THIS LINK! - moo-ve-it.vercel.app
 
 A premium, modern, and minimalist web application to monitor and manage a herd of cattle using an autonomous shepherd drone. Named "Moo-ve It!", it features a real-time map visualization of the farm, drone, and cattle, all running as a dynamic, client-side simulation.
 
