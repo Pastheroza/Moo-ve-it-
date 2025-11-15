@@ -6,7 +6,36 @@ import React from 'react';
  * and contains the site title and navigation links.
  */
 export const Header: React.FC = () => {
-  const navItems = ['Live Map', 'Features', 'About', 'Contact'];
+  // Converted navItems to an array of objects to include href for scrolling
+  const navItems = [
+    { name: 'Live Map', href: '#live-map' },
+    { name: 'Features', href: '#features' },
+    { name: 'About', href: '#about' },
+    { name: 'Contact', href: '#contact' },
+  ];
+
+  /**
+   * Handles the click event for navigation links.
+   * It prevents the default anchor behavior and smoothly scrolls to the target section.
+   * @param event - The mouse click event.
+   * @param targetId - The ID of the element to scroll to (e.g., '#features').
+   */
+  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    // Prevent the default browser action of jumping to the anchor,
+    // which was causing a full page reload and breaking the SPA.
+    event.preventDefault();
+    
+    // Find the target element using the provided ID.
+    const targetElement = document.querySelector(targetId);
+    
+    // If the element exists, smoothly scroll to it.
+    // The browser's `scrollIntoView` API respects the `scroll-margin-top`
+    // CSS property, which prevents the sticky header from hiding the section title.
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
 
   return (
     <header className="sticky top-0 z-50 py-4 px-4 md:px-6 lg:px-8 bg-base-black/70 backdrop-blur-lg">
@@ -17,8 +46,13 @@ export const Header: React.FC = () => {
         {/* Navigation for medium screens and up */}
         <nav className="hidden md:flex space-x-8">
           {navItems.map(item => (
-            <a key={item} href="#" className="text-text-primary/70 hover:text-text-primary transition-colors duration-300">
-              {item}
+            <a 
+              key={item.name} 
+              href={item.href} 
+              onClick={(e) => handleNavClick(e, item.href)}
+              className="text-text-primary/70 hover:text-text-primary transition-colors duration-300 cursor-pointer"
+            >
+              {item.name}
             </a>
           ))}
         </nav>

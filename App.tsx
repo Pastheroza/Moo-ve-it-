@@ -130,13 +130,20 @@ const App: React.FC = () => {
         let newActiveCommand = activeDroneCommand;
         let newScanIndex = scanIndex;
 
+        // --- FIX: Wake up the drone if it's idle/charging but receives a new command ---
+        // This is the core fix for the "stuck drone" bug. It ensures that a new
+        // user command immediately overrides the drone's current passive state.
+        if ((newStatus === 'idle' || newStatus === 'charging') && (newManualTarget || newActiveCommand)) {
+             newStatus = 'patrolling';
+        }
+
         // 1. Battery & Status Simulation based on location
         const distToBase = Math.sqrt(Math.pow(prevDrone.position.x - DRONE_BASE.cx, 2) + Math.pow(prevDrone.position.y - DRONE_BASE.cy, 2));
         const atBase = distToBase < DRONE_BASE.r;
 
         if (atBase) {
              // Only switch to charging/idle if there's no overriding manual command.
-             // This prevents the drone from getting stuck at the base after a command is issued.
+             // This prevents the drone from reverting to idle while it has a pending command.
             if (!newManualTarget && !newActiveCommand) {
                 if (prevDrone.battery < 100) {
                     newStatus = 'charging';
@@ -185,9 +192,6 @@ const App: React.FC = () => {
                     newManualTarget = SCAN_WAYPOINTS[newScanIndex];
                     setScanIndex(newScanIndex);
                 } else { // Command finished or manual target reached
-                    if (newActiveCommand === 'return-to-base') {
-                        // Let the battery logic handle switching to 'charging' or 'idle'
-                    }
                     newManualTarget = null;
                     newActiveCommand = null;
                 }
@@ -378,21 +382,33 @@ const App: React.FC = () => {
       <Header />
       <main className="px-4 md:px-6 lg:px-8 py-8 space-y-16">
         <HeroSection />
-        <MapSection 
-            cows={cows} 
-            drone={drone} 
-            weather={weather} 
-            herdStatus={herdStatus}
-            distanceHistory={distanceHistory}
-            aiReport={aiReport}
-            onSetDroneTarget={handleSetDroneTarget}
-            droneManualTarget={droneManualTarget}
-            onDroneCommand={handleDroneCommand}
-        />
-        <FeaturesSection />
-        <AboutSection />
+        {/* Added a wrapper div with an ID for anchor scrolling */}
+        <div id="live-map">
+            <MapSection 
+                cows={cows} 
+                drone={drone} 
+                weather={weather} 
+                herdStatus={herdStatus}
+                distanceHistory={distanceHistory}
+                aiReport={aiReport}
+                onSetDroneTarget={handleSetDroneTarget}
+                droneManualTarget={droneManualTarget}
+                onDroneCommand={handleDroneCommand}
+            />
+        </div>
+        {/* Added a wrapper div with an ID for anchor scrolling */}
+        <div id="features">
+            <FeaturesSection />
+        </div>
+        {/* Added a wrapper div with an ID for anchor scrolling */}
+        <div id="about">
+            <AboutSection />
+        </div>
       </main>
-      <Footer />
+      {/* Added a wrapper div with an ID for anchor scrolling */}
+      <div id="contact">
+        <Footer />
+      </div>
     </div>
   );
 };
