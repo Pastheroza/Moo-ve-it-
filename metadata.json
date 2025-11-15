@@ -1,0 +1,5 @@
+{
+  "name": "Moo-ve It!",
+  "description": "A premium, modern, and minimalist web application to monitor and manage a herd of cattle using an autonomous shepherd drone. Named 'Moo-ve It!', it features a real-time map visualization of the farm, drone, and cattle.",
+  "requestFramePermissions": []
+}
